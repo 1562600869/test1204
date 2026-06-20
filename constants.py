@@ -1,9 +1,11 @@
 import sys
+import re
 
 VALID_STYLES = ("长拳", "太极", "南拳", "器械")
 VALID_EVENTS = ("套路", "散打", "器械")
 VALID_LEVELS = ("初学", "一级", "二级", "三级", "四级", "五级")
 LEVEL_ORDER = {level: idx for idx, level in enumerate(VALID_LEVELS)}
+MONTH_PATTERN = re.compile(r"^\d{4}-\d{2}$")
 
 
 def validate_style(style):
@@ -21,4 +23,10 @@ def validate_event(event):
 def validate_level(level):
     if level not in VALID_LEVELS:
         print(f"错误: 段位只能是 {('/').join(VALID_LEVELS)}", file=sys.stderr)
+        sys.exit(1)
+
+
+def validate_month(month):
+    if not MONTH_PATTERN.match(month):
+        print(f"错误: 月份格式必须为 YYYY-MM (如 2024-03)", file=sys.stderr)
         sys.exit(1)

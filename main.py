@@ -1,6 +1,7 @@
 import argparse
 import sys
 import core
+from constants import VALID_STYLES, VALID_EVENTS, VALID_LEVELS, validate_month
 
 
 def main():
@@ -11,19 +12,19 @@ def main():
     p_add.add_argument("member_id", help="队员编号")
     p_add.add_argument("name", help="姓名")
     p_add.add_argument("--phone", required=True, help="联系电话")
-    p_add.add_argument("--style", required=True, help="武术风格: 长拳/太极/南拳/器械")
-    p_add.add_argument("--level", required=True, help="段位: 初学/一级/二级/三级/四级/五级")
+    p_add.add_argument("--style", required=True, choices=VALID_STYLES, help="武术风格: 长拳/太极/南拳/器械")
+    p_add.add_argument("--level", required=True, choices=VALID_LEVELS, help="段位: 初学/一级/二级/三级/四级/五级")
 
     p_score = subparsers.add_parser("record-score", help="记录比赛成绩")
     p_score.add_argument("member_id", help="队员编号")
-    p_score.add_argument("--event", required=True, help="比赛项目: 套路/散打/器械")
+    p_score.add_argument("--event", required=True, choices=VALID_EVENTS, help="比赛项目: 套路/散打/器械")
     p_score.add_argument("--score", required=True, type=float, help="成绩(浮点数)")
     p_score.add_argument("--date", required=True, help="比赛日期")
     p_score.add_argument("--competition", required=True, help="比赛名称")
 
     p_promote = subparsers.add_parser("promote", help="段位晋升")
     p_promote.add_argument("member_id", help="队员编号")
-    p_promote.add_argument("--to-level", required=True, help="目标段位")
+    p_promote.add_argument("--to-level", required=True, choices=VALID_LEVELS, help="目标段位")
     p_promote.add_argument("--date", required=True, help="晋升日期")
 
     p_stats = subparsers.add_parser("member-stats", help="队员统计")
@@ -47,6 +48,7 @@ def main():
     elif args.command == "member-stats":
         core.member_stats(args.member_id)
     elif args.command == "monthly-scores":
+        validate_month(args.month)
         core.monthly_scores(args.month)
 
 
